@@ -1,4 +1,4 @@
-package servicio;
+package excepciones;
 
 public class BancoException extends Exception {
     public BancoException(){

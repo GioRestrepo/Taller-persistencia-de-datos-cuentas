@@ -1,6 +1,8 @@
 package repositorio;
 
 import entidades.CuentaBancaria;
+import entidades.CuentaCorriente;
+import entidades.CuentaDeAhorros;
 
 import java.sql.*;
 
@@ -23,6 +25,7 @@ public class CuentaBancariaBaseDeDatos implements Repositorio {
 
             String sql = "CREATE TABLE IF NOT EXISTS cuentas (\n"
                     + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                    + " tipoCuenta TEXT NOT NULL,\n"
                     + " saldo FLOAT NOT NULL,\n"
                     + " numeroDeCuenta TEXT NOT NULL UNIQUE,\n"
                     + " propietario TEXT NOT NULL\n"
@@ -40,9 +43,12 @@ public class CuentaBancariaBaseDeDatos implements Repositorio {
     public void crearCuenta(Object objeto) {
         try (Connection conexion = DriverManager.getConnection(conexionBD)) {
             CuentaBancaria cuentaBancaria = (CuentaBancaria) objeto;
-            String sentenciaSql = "INSERT INTO cuentas (saldo, numeroDeCuenta, propietario) " +
-                    " VALUES('" + cuentaBancaria.getSaldo() + "', '" + cuentaBancaria.getNumeroDeCuenta()
-                    + "', " + cuentaBancaria.getPropietario() + "');";
+            String sentenciaSql = "INSERT INTO cuentas (tipoCuenta, saldo, numeroDeCuenta, propietario) " +
+                    " VALUES('" + cuentaBancaria.getTipoCuenta()
+                    + "', " + cuentaBancaria.getSaldo()
+                    + ", '" + cuentaBancaria.getNumeroDeCuenta()
+                    + "', '" + cuentaBancaria.getPropietario() + "');";
+            System.out.println(sentenciaSql);
             Statement sentencia = conexion.createStatement();
             sentencia.execute(sentenciaSql);
         } catch (SQLException e) {
@@ -62,12 +68,16 @@ public class CuentaBancariaBaseDeDatos implements Repositorio {
             ResultSet resultadoConsulta = sentencia.executeQuery();
             if (resultadoConsulta != null && resultadoConsulta.next()) {
                 CuentaBancaria cuentaBancaria = null;
+                String tipoCuenta = resultadoConsulta.getString("tipoCuenta");
                 float saldo = resultadoConsulta.getFloat("saldo");
                 String numeroDeCuentaResultado = resultadoConsulta.getString("numeroDeCuenta");
                 String propietario = resultadoConsulta.getString("propietario");
 
-                cuentaBancaria = new CuentaBancaria(saldo,numeroDeCuentaResultado,propietario);
-                return cuentaBancaria;
+                if(tipoCuenta.equalsIgnoreCase("cc")){
+                    return new CuentaCorriente(saldo, numeroDeCuenta, propietario);
+                } else {
+                    return new CuentaDeAhorros(saldo, numeroDeCuenta, propietario);
+                }
             }
 
         } catch (SQLException e) {
