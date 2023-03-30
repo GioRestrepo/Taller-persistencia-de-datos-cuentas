@@ -75,4 +75,16 @@ public class CuentaBancariaBaseDeDatos implements Repositorio {
         }
         return null;
     }
+    public void actualizar(String numeroDeCuenta, float saldo){
+        try (Connection conexion = DriverManager.getConnection(conexionBD)) {
+            String sentenciaSql = "UPDATE cuentas SET saldo = '" + saldo + "'  WHERE numeroDeCuenta = '" + numeroDeCuenta + "';";
+            Statement sentencia = conexion.createStatement();
+            sentencia.execute(sentenciaSql);
+        } catch (SQLException e) {
+            System.err.println("Error de conexión: " + e);
+        } catch (Exception e) {
+            System.err.println("Error " + e.getMessage());
+        }
+
+    }
 }
