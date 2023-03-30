@@ -142,13 +142,23 @@ public class gui_cuenta {
 
                 CuentaCorriente cuentaCC = (CuentaCorriente) cuentaOrigen;
                 cuentaCC.transferirDinero(cuentaOrigen, cuentaDestino, saldo);
+
+                //Actualizando cuenta de origen
                 servicioCuentaBancaria.actualizarSaldo(cuentaCC.getNumeroDeCuenta(), cuentaCC.getSaldo());
+
+                //Cuenta destino
+                servicioCuentaBancaria.actualizarSaldo(cuentaDestino.getNumeroDeCuenta(), cuentaDestino.getSaldo());
+
 
             }else{
                 CuentaDeAhorros cuentaA = (CuentaDeAhorros) cuentaOrigen;
                 cuentaA.transferirDinero(cuentaOrigen, cuentaDestino, saldo);
 
+                //Cuenta origen
                 servicioCuentaBancaria.actualizarSaldo(cuentaA.getNumeroDeCuenta(), cuentaA.getSaldo());
+
+                //Cuenta destino
+                servicioCuentaBancaria.actualizarSaldo(cuentaDestino.getNumeroDeCuenta(), cuentaDestino.getSaldo());
             }
 
         }

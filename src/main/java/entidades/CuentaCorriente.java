@@ -32,21 +32,19 @@ private int numeroDetransferencias = 0;
 
     @Override
     public ArrayList<CuentaBancaria> transferirDinero(CuentaBancaria cuentaOrigen, CuentaBancaria cuentaDestino,
-                                                      float transferencia){
-        float dinero;
+                                                   float transferencia){
+       float dinero = (float) (transferencia + (transferencia * 0.02));
 
         if (cuentaOrigen.getTipoCuenta() != cuentaDestino.getTipoCuenta()){
             if (transferencia <= this.saldo && this.numeroDetransferencias <2) {
-                    dinero = this.saldo += (transferencia + (transferencia * 0.02));
                     cuentaOrigen.retirarDinero(dinero);
-                    cuentaDestino.consignarDinero(dinero);
+                    cuentaDestino.consignarDinero(transferencia);
                     this.numeroDetransferencias++;
             }
         }else {
                 if (transferencia <= this.saldo) {
-                    dinero = this.saldo + transferencia;
-                    cuentaOrigen.retirarDinero(dinero);
-                    cuentaDestino.consignarDinero(Math.abs(dinero));
+                    cuentaOrigen.retirarDinero(transferencia);
+                    cuentaDestino.consignarDinero(transferencia);
                 }
         }
         ArrayList<CuentaBancaria> cuentas = new ArrayList<>();

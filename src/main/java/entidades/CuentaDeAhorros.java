@@ -16,7 +16,6 @@ public class CuentaDeAhorros extends CuentaBancaria {
     public void consignarDinero(float dinero) {
         if (dinero > 0) {
             if (dinero > 0 && numeroDeConsignaciones < 2) {
-                //float dineroprop = this.saldo;
                 this.saldo += (dinero + (dinero * 0.05));
                 this.numeroDeConsignaciones++;
             } else {
@@ -34,7 +33,6 @@ public class CuentaDeAhorros extends CuentaBancaria {
         if (dinero <= this.saldo) {
             if (numeroDeRetiros > 3) {
                 float dineroRetirado = this.saldo -= (dinero + (dinero * 0.01));
-                // repositorioBanco.retirarDinero(dineroRetirado);
                 this.numeroDeRetiros++;
             } else {
                 this.saldo -= dinero;
@@ -49,20 +47,18 @@ public class CuentaDeAhorros extends CuentaBancaria {
     @Override
     public ArrayList<CuentaBancaria> transferirDinero(CuentaBancaria cuentaOrigen, CuentaBancaria cuentaDestino, float transferencia){
 
-        float dinero;
+        float dinero = (float) (transferencia + (transferencia * 0.015));
 
         if (cuentaOrigen.getTipoCuenta() != cuentaDestino.getTipoCuenta()){
 
             if (transferencia <= this.saldo) {
-                dinero = this.saldo -= (transferencia + (transferencia * 0.015));
                 cuentaOrigen.retirarDinero(dinero);
-                cuentaDestino.consignarDinero(dinero);
+                cuentaDestino.consignarDinero(transferencia);
             }
             }else{
                 if (transferencia <= this.saldo) {
-                    dinero = this.saldo -= transferencia;
-                    cuentaOrigen.retirarDinero(dinero);
-                    cuentaDestino.consignarDinero(dinero);
+                    cuentaOrigen.retirarDinero(transferencia);
+                    cuentaDestino.consignarDinero(transferencia);
                 }
 
             }
